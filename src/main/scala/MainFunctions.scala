@@ -160,36 +160,51 @@ object MainFunctions extends App {
 
   val rules: List[String => Double] = List(rule1, rule2, rule3, rule4)
 
-  def applyRules(row: String): List[Double] =
-    rules.
-      map(rule => rule(row))
+  def applyRules(row: String): List[Double] = {
+    rules.map(rule => rule(row))
+  }
+
+  def calculateDiscount(discounts: List[Double]): Double = {
+    val top2 = discounts.filter(_ > 0).sorted(Ordering[Double].reverse).take(2)
+
+    if (top2.isEmpty)
+      0.00
+    else
+      top2.sum / top2.length
+  }
+
+  def finalPrice(row: String , discount: Double): Double = {
+    val originalPrice = getPrice(row)
+
+    val finalPrice = originalPrice * (1 - discount / 100)
+
+    finalPrice
+  }
+
+  def pipeline(allRows: List[String]): List[(String , Double , Double)] = {
+    // allRows.map(row).applyRules.calculateDiscounts.finalPrice
+    allRows.map{row =>
+      val discount = applyRules(row)
+
+      println(s"DEBUG: Raw row: $row")
+      println(s"DEBUG: Applied rules results: $discount")
+
+      val avgDiscount = calculateDiscount(discount)
+
+      println(s"DEBUG: AVGDiscount: $avgDiscount")
+
+      val totalPrice = finalPrice(row, avgDiscount)
+
+      println(s"DEBUG: TotalPrice: $totalPrice")
+
+      (getProductName(row) , avgDiscount , totalPrice)
+    }
+
+  }
 
 
-  //  def finalDiscount(ds: List[Double]): Double = {
-  //    if (top2.isEmpty)
-  //      0.0
-  //    else
-  //      top2.sum / top2.size
-  //  }
-  //
-  //  def finalPrice(row: String, discount: Double): Double = {
-  //    val price = getPrice(row)
-  //    price * (1 - discount / 100)
-  //  }
-  //
-  //  def processRow(row: String) = {
-  //    val discounts = applyRules(row)
-  //
-  //    val discount = finalDiscount(discounts)
-  //
-  //    val finalP = finalPrice(row, discount)
-  //
-  //    (getProductName(row), discount, finalP)
-  //  }
-  //
-  //  val results = data.map(processRow)
-  //
-  //  // results.foreach(println)
-  //
-  //  DB_Connection.insertAll(results)
+  val results = pipeline(data)
+
+  DB_Connection.insertAll(results)
+
 }

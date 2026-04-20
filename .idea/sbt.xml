@@ -7,13 +7,11 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="D:\ITI\scala\NewScala\MainFunctions" />
-            <option value="D:\ITI\scala\NewScala\MainFunctions\project" />
+            <option value="D:\ITI\scala\NewScala\Functional-Programming-with-Scala" />
+            <option value="D:\ITI\scala\NewScala\Functional-Programming-with-Scala\project" />
           </set>
         </option>
-        <option name="resolveSbtClassifiers" value="true" />
         <option name="sbtVersion" value="1.11.5" />
-        <option name="separateProdAndTestSourcesIsExplicit" value="true" />
       </SbtProjectSettings>
     </option>
   </component>

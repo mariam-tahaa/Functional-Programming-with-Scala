@@ -1,6 +1,6 @@
 import java.sql.{Connection, DriverManager, PreparedStatement}
 
-object DB_Connection extends App {
+object DB_Connection {
 
   // 1. Load Oracle Driver
   Class.forName("oracle.jdbc.OracleDriver")

@@ -2,6 +2,6 @@
 <project version="4">
   <component name="ScalaCompilerConfiguration">
     <option name="separateProdTestSources" value="true" />
-    <profile name="sbt 1" modules="MainFunctions,MainFunctions.main,MainFunctions.test" />
+    <profile name="sbt 1" modules="MainFunctions,MainFunctions.main,MainFunctions.test,functional-programming-with-scala_196,functional-programming-with-scala_196.main,functional-programming-with-scala_196.test" />
   </component>
 </project>

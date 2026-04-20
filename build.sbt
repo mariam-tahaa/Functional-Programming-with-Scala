@@ -7,5 +7,7 @@ lazy val root = (project in file("."))
     name := "MainFunctions"
   )
 libraryDependencies ++= Seq(
-  "ch.qos.logback" % "logback-classic" % "1.2.12"
-)
+  "ch.qos.logback" % "logback-classic" % "1.2.12" )
+
+libraryDependencies += "com.oracle.database.jdbc" % "ojdbc8" % "21.1.0.0"
+
