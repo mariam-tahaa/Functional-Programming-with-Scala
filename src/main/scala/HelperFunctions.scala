@@ -1,6 +1,5 @@
 import scala.io.{Codec, Source}
 import java.time.LocalDate
-import java.time.temporal.ChronoUnit
 import scala.util.{Try, Using}
 
 object HelperFunctions {
@@ -51,11 +50,5 @@ object HelperFunctions {
   def getChannel(row: String): String = {
     splitRow(row)(Config.channelCol)
   }
-
-  // 8- Compare two dates and get the Days between them
-  def compareDates(f1: String => LocalDate, f2: String => LocalDate, row: String): Long = {
-    // Take getTransDate & getExpiryDate To Get Difference Between Them
-
-    ChronoUnit.DAYS.between(f1(row), f2(row))
-  }
+  
 }

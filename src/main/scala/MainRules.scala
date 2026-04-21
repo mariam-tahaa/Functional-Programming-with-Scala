@@ -1,166 +1,128 @@
-import HelperFunctions.{ getQuantity, compareDates,
+import java.time.temporal.ChronoUnit
+import HelperFunctions.{ getQuantity,
                          getTransDate, getExpiryDate,
                          getProductName, getPrice,
-                         getPaymentMethod, getChannel
-                       }
+                         getPaymentMethod, getChannel}
+
 
 object MainRules {
 
+  // To avoid recalculation of functions in the code
+  // Cash functions
+  case class ParsedRow(
+                        transDate: java.time.LocalDate,
+                        expiryDate: java.time.LocalDate,
+                        productName: String,
+                        quantity: Int,
+                        price: Double,
+                        paymentMethod: String,
+                        channel: String
+                      )
+
+  def parseRow(row: String): ParsedRow = {
+    ParsedRow(
+      getTransDate(row),
+      getExpiryDate(row),
+      getProductName(row),
+      getQuantity(row),
+      getPrice(row),
+      getPaymentMethod(row),
+      getChannel(row)
+    )
+  }
+
+  // Class Contains Qualifier and Calculate Rules
+
   // Function to qualify   fun(order, bool)
   // Function to calculate fun(order, double)
-
-  // Qualify to Rule1
-  def Q_expiryRule(row: String): Boolean = {
-
-    val daysLeft = compareDates(getTransDate, getExpiryDate, row)
-
-    if (daysLeft >= 0 && daysLeft < 30)
-      true
-    else
-      false
+  case class Rule(
+                   qualify: ParsedRow => Boolean,
+                   calculate: ParsedRow => Double
+                 )
+  {
+    def apply(p: ParsedRow): Double =
+      if (qualify(p)) calculate(p) else 0.0
   }
 
-  // Calculate Rule1
-  def C_expiryRule(row: String): Double = {
-    val daysLeft = compareDates(getTransDate, getExpiryDate, row)
 
-    if(Q_expiryRule(row))
+  // Rule1 expiryDate
+  val expiryRule = Rule (
+    qualify = p => {
+      val daysLeft = ChronoUnit.DAYS.between(p.transDate, p.expiryDate)
+      daysLeft > 0 && daysLeft < 30
+    },
+    calculate = p => {
+      val daysLeft = ChronoUnit.DAYS.between(p.transDate, p.expiryDate)
       30 - daysLeft
-    else
-      0.00
-  }
+    }
+  )
 
-  ////////////////
 
-  // Qualify to Rule2
-  def Q_specialDateRule(row: String): Boolean = {
+  // Rule2 specialDate
+  val specialDateRule = Rule(
+    qualify = p =>
+      p.transDate.getDayOfMonth == 23 &&
+        p.transDate.getMonthValue == 3,
 
-    val specialDate = getTransDate(row)
+    calculate = _ => 50
+  )
 
-    if (specialDate.getDayOfMonth == 23 && specialDate.getMonthValue == 3)
-      true
-    else
-      false
-  }
 
-  // Calculate Rule2
-  def C_specialDateRule(row: String): Double = {
-    if (Q_specialDateRule(row))
-      50
-    else
-      0.00
-  }
+  // Rule3 productName
+  val productNameRule = Rule(
+  qualify = p =>
+      p.productName.contains("wine") ||
+      p.productName.contains("cheese"),
 
-  ////////////////
+    calculate = p =>
+      if (p.productName.contains("cheese")) 10
+      else if (p.productName.contains("wine")) 5
+      else 0
+  )
 
-  // Qualify to Rule3
-  def Q_productNameRule(row: String): Boolean = {
-    val name = getProductName(row)
-    if (name.contains("wine") || name.contains("cheese"))
-      true
-    else
-      false
-  }
 
-  // Calculate Rule3
-  def C_productNameRule(row: String): Double = {
-    val name = getProductName(row)
+  // Rule4 Quantity
+  val quantityRule = Rule(
+    qualify = p => p.quantity > 5,
 
-    if (name.contains("cheese"))
-      10
-    else if (name.contains("wine"))
-      5
-    else
-      0.00
-  }
-
-  ////////////////
-
-  // Qualify to Rule4
-  def Q_productQuantityRule(row: String): Boolean = {
-    val q = getQuantity(row)
-    q > 5
-  }
-
-  // Calculate Rule4
-  def C_productQuantityRule(row: String): Double = {
-    val q = getQuantity(row)
-
-    q match {
+    calculate = p => p.quantity match {
       case x if x <= 9  => 5
       case x if x <= 14 => 7
       case _            => 10
     }
-  }
+  )
 
-  ////////////////
 
-  // Qualify to Rule5
-  def Q_paymentVisaRule(row: String): Boolean = {
+  // Rule5 paymentMethod
+  val visaRule = Rule(
+    qualify = p => p.paymentMethod == "Visa",
+    calculate = _ => 5
+  )
 
-    val paymentMethod = getPaymentMethod(row)
 
-    if (paymentMethod == "Visa")
-      true
-    else
-      false
-  }
+  // Rule6 channel Type (APP)
+  val appRule = Rule(
+    qualify = p => p.channel == "App",
 
-  // Calculate Rule5
-  def C_paymentVisaRule(row: String): Double = {
-    if (Q_paymentVisaRule(row))
-      5
-    else
-      0.00
-  }
-
-  ////////////////
-
-  // Qualify to Rule6
-  def Q_AppRule(row: String): Boolean = {
-
-    val channelType = getChannel(row)
-
-    if (channelType == "App")
-      true
-    else
-      false
-  }
-
-  // Calculate Rule6
-  def C_AppRule(row: String): Double = {
-    val q = getQuantity(row)
-    if (Q_AppRule(row)) {
-       val disc = ((q - 1) / 5 + 1) * 5.00
-       disc
-    } else
-      0.00
-  }
+    calculate = p => {
+      val q = p.quantity
+      ((q - 1) / 5 + 1) * 5.0
+    }
+  )
 
   /////////////////////////// Combine All Rules ///////////////////////////
 
-  def allRules(q: String => Boolean, c: String => Double): String => Double = {
-    row =>
-      if (q(row))
-        c(row)
-      else
-        0.00
-  }
+  val rules: List[Rule] = List(
+    expiryRule,
+    specialDateRule,
+    productNameRule,
+    quantityRule,
+    visaRule,
+    appRule
+  )
 
-  val rule1 = allRules(Q_expiryRule, C_expiryRule)
-  val rule2 = allRules(Q_specialDateRule, C_specialDateRule)
-  val rule3 = allRules(Q_productNameRule, C_productNameRule)
-  val rule4 = allRules(Q_productQuantityRule, C_productQuantityRule)
-  val rule5 = allRules(Q_paymentVisaRule, C_paymentVisaRule)
-  val rule6 = allRules(Q_AppRule, C_AppRule)
-
-
-  val rules: List[String => Double] = List(rule1, rule2, rule3, rule4, rule5, rule6)
-
-
-  def applyRules(row: String): List[Double] = {
-    rules.map(rule => rule(row))
-  }
+  def applyRules(p: ParsedRow): List[Double] =
+    rules.map(_ (p))
 
   /////////////////////////// Calculate Discount & Get Top 2 ///////////////////////////
 
@@ -173,12 +135,9 @@ object MainRules {
       top2.sum / top2.length
   }
 
-  def finalPrice(row: String , discount: Double): Double = {
-    val originalPrice = getPrice(row)
+  /////////////////////////// Calculate Final Price ///////////////////////////
 
-    val finalPrice = originalPrice * (1 - discount / 100)
-
-    finalPrice
-  }
+  def finalPrice(p: ParsedRow, discount: Double): Double =
+    p.price * (1 - discount / 100)
 
 }

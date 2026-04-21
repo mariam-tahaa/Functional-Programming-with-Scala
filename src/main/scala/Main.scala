@@ -1,40 +1,55 @@
-import MainRules.{applyRules, calculateDiscount, finalPrice}
+import MainRules.{applyRules, calculateDiscount, finalPrice, parseRow}
+
 import scala.util.{Failure, Success, Try}
 import Log.{error, info, warn}
-import HelperFunctions.{readFile, getProductName}
+import HelperFunctions.readFile
+
+import scala.collection.parallel.CollectionConverters._
+import scala.collection.parallel.ForkJoinTaskSupport
 
 object Main extends App {
 
   val logMSG = Config.logPath
 
-  def pipeline(allRows: List[String]): List[(String , Double , Double)] = {
+  // 2. Pipeline
+  def pipeline(allRows: List[String]): List[(String, Double, Double)] = {
     // allRows.map(row).applyRules.calculateDiscounts.finalPrice
-    allRows.flatMap{row =>
-      Try {
-        val discount = applyRules(row)
-        val avgDiscount = calculateDiscount(discount)
-        val totalPrice = finalPrice(row, avgDiscount)
-        val productName  = getProductName(row)
 
-        info(logMSG, s"Processed $productName: Discount $avgDiscount%, Final Price $totalPrice")
-        (productName, avgDiscount, totalPrice)
-      }
-      match {
-        case Success(res) => Some(res)
-        case Failure(e) =>
-          error(logMSG, s"Error processing row [$row]: ${e.getMessage}")
-          None
-      }
+    val forkJoinPool = new java.util.concurrent.ForkJoinPool(6)
 
+    val parRows = allRows.par
+    parRows.tasksupport = new ForkJoinTaskSupport(forkJoinPool)
+
+    def safeProcess(row: String): Option[(String, Double, Double)] = {
+      try {
+        val parsed = parseRow(row)
+        val discounts = applyRules(parsed)
+        val avgDiscount = calculateDiscount(discounts)
+        val totalPrice = finalPrice(parsed, avgDiscount)
+
+        //Log.log(s"Processed ${parsed.productName}: Discount $avgDiscount%, Final Price $totalPrice")
+
+        Some(parsed.productName, avgDiscount, totalPrice)
+      } catch {
+        case _: Exception => None
+      }
     }
+
+    parRows.flatMap(safeProcess).toList
 
   }
 
-  // Calling pipeline
+  // Calling Pipeline
   info(logMSG, "Start Processing New Orders!!!")
 
-  val finalResults = readFile(Config.dataPath) match {
-    case Success(lines) if lines.nonEmpty => pipeline(lines.tail)
+  val startTime = System.currentTimeMillis()
+
+  val finalResults = readFile(Config.dataPath)
+  match {
+    case Success(lines)
+      if lines.nonEmpty =>
+      info(logMSG, "File has been read successfully")
+      pipeline(lines.tail)
     case Success(_) =>
       warn(logMSG, "File is empty.")
       List()
@@ -43,11 +58,27 @@ object Main extends App {
       List()
   }
 
+  val endTime = System.currentTimeMillis()
+
+  println(s"TOTAL PROCESSING TIME = ${(endTime - startTime) / 1000.0} seconds")
+
+  // Insert Batches To DB
   if (finalResults.nonEmpty) {
-    Try(DB_Connection.insertAll(finalResults)) match {
+
+    val startInsert = System.currentTimeMillis()
+
+    Try(finalResults
+      .grouped(100000)
+      .foreach(batch => DB_Connection.insertBatch(batch)))
+
+    match {
       case Success(_) => info(logMSG, s"Successfully inserted ${finalResults.size} records.")
+        val endInsert = System.currentTimeMillis()
+
+        println(s"DB INSERT TIME = ${(endInsert - startInsert) / 1000.0} seconds")
+
       case Failure(e) => error(logMSG, s"Database error : ${e.getMessage}")
+
     }
   }
-
 }

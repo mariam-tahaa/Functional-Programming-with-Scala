@@ -12,3 +12,5 @@ libraryDependencies += "com.oracle.database.jdbc" % "ojdbc8" % "21.1.0.0"
 // configuration data
 libraryDependencies += "com.typesafe" % "config" % "1.4.3"
 
+// Parallel Collection
+libraryDependencies += "org.scala-lang.modules" %% "scala-parallel-collections" % "1.0.4"

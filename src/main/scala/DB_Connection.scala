@@ -2,53 +2,54 @@ import java.sql.{Connection, DriverManager, PreparedStatement}
 
 object DB_Connection {
 
-  // 1. Load Oracle Driver
+  // 1- Load Oracle Driver
   Class.forName(Config.oracleDriver)
 
   // 2. Create Connection
   def getConnection(): Connection = {
-
-    val url = Config.dbUrl
-    val user = Config.dbUser
-    val password = Config.dbPassword
-
-    DriverManager.getConnection(url, user, password)
+    DriverManager.getConnection(
+      Config.dbUrl,
+      Config.dbUser,
+      Config.dbPassword
+    )
   }
 
-  // 3. Insert one row
-  def insertRow(conn: Connection, product: String, discount: Double, finalPrice: Double): Unit = {
-
-    val sql =
-      """
-        INSERT INTO transactions_result
-        (id, product_name, discount, final_price)
-        VALUES (transactions_seq.NEXTVAL, ?, ?, ?)
-      """
-
-    val stm: PreparedStatement = conn.prepareStatement(sql)
-
-    stm.setString(1, product)
-    stm.setDouble(2, discount)
-    stm.setDouble(3, finalPrice)
-
-    stm.executeUpdate()
-    stm.close()
-  }
-
-  // 4. Insert multiple rows
-  def insertAll(results: List[(String, Double, Double)]): Unit = {
+  // 2. Insert orders as batches to DB
+  def insertBatch(results: List[(String, Double, Double)]): Unit = {
 
     val conn = getConnection()
 
-    try {
-      results.foreach {
-        case (product, discount, finalPrice) => insertRow(conn, product, discount, finalPrice)
-      }
-    }
+    val sql =
+      """
+        INSERT INTO transactions_order
+        (product_name, discount, final_price)
+        VALUES (?, ?, ?)
+      """
 
-    finally {
+    val stmt = conn.prepareStatement(sql)
+
+    try {
+
+      conn.setAutoCommit(false)
+
+      results.foreach {
+        case (product, discount, finalPrice) =>
+          stmt.setString(1, product)
+          stmt.setDouble(2, discount)
+          stmt.setDouble(3, finalPrice)
+          stmt.addBatch()
+      }
+
+      stmt.executeBatch()
+      conn.commit()
+
+    } catch {
+      case e: Exception =>
+        conn.rollback()
+        throw e
+    } finally {
+      stmt.close()
       conn.close()
     }
   }
-
 }

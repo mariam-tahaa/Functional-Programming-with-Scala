@@ -1,0 +1,11 @@
+[2026-04-21T23:33:00.313672600] [INFO] Start Processing New Orders!!!
+[2026-04-21T23:34:12.451895] [INFO] Successfully inserted 10000000 records.
+[2026-04-21T23:35:07.806604400] [INFO] Start Processing New Orders!!!
+[2026-04-21T23:36:07.175042700] [INFO] Successfully inserted 10000000 records.
+[2026-04-21T23:36:59.151093800] [INFO] Start Processing New Orders!!!
+[2026-04-21T23:37:20.452126100] [ERROR] Database error : ORA-01017: invalid username/password; logon denied
+
+[2026-04-21T23:46:19.837228700] [INFO] Start Processing New Orders!!!
+[2026-04-21T23:46:20.764597] [INFO] Successfully inserted 1000 records.
+[2026-04-21T23:51:07.348140800] [INFO] Start Processing New Orders!!!
+[2026-04-21T23:51:07.369957300] [ERROR] Failed to read file: src\main\resources\TRX1000.csv (The system cannot find the file specified)
