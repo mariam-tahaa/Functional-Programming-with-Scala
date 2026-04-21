@@ -1,60 +1,9 @@
-import scala.io.{Codec, Source}
-import java.time.LocalDate
-import java.time.temporal.ChronoUnit
-import java.util.logging.Logger
+import HelperFunctions.{ getQuantity, compareDates,
+                         getTransDate, getExpiryDate,
+                         getProductName, getPrice
+                       }
 
-object MainFunctions extends App {
-
-  val logger = Logger.getLogger("MainFunctions")
-
-  // Read file
-  def readFile(fileName: String, codec: String = Codec.default.toString): List[String] = {
-    Source.fromFile(fileName, codec).getLines().toList
-  }
-
-  // Read Data
-  val file = readFile("src/main/resources/TRX1000.csv")
-  //logger.info("File loaded")
-  val data = file.tail
-
-  // Split rows
-  def splitRow(row: String): Array[String] = {
-    row.split(",")
-  }
-
-  // 1- Get Transaction Date
-  def getTransDate(row : String): LocalDate = {
-    LocalDate.parse(splitRow(row)(0).split("T")(0))
-  }
-
-  // 2- Get Expiry Date
-  def getExpiryDate(row: String): LocalDate = {
-    LocalDate.parse(splitRow(row)(2))
-  }
-
-  // 3- Get Product Name
-  def getProductName(row: String): String = {
-    splitRow(row)(1).toLowerCase
-  }
-
-  // 4- Get Price
-  def getPrice(row: String): Double = {
-    splitRow(row)(4).toDouble
-  }
-
-  // 5- Get Quantity
-  def getQuantity(row: String): Int = {
-    splitRow(row)(3).toInt
-  }
-
-  // 6- Compare two dates and get the Days between them
-  def compareDates(f1: String => LocalDate, f2: String => LocalDate, row: String): Long = {
-    // Take getTransDate & getExpiryDate To Get Difference Between Them
-
-    ChronoUnit.DAYS.between(f1(row), f2(row))
-  }
-
-  /////////////////////////// Rules ///////////////////////////
+object MainRules {
 
   // Function to qualify   fun(order, bool)
   // Function to calculate fun(order, double)
@@ -160,9 +109,12 @@ object MainFunctions extends App {
 
   val rules: List[String => Double] = List(rule1, rule2, rule3, rule4)
 
+
   def applyRules(row: String): List[Double] = {
     rules.map(rule => rule(row))
   }
+
+  /////////////////////////// Calculate Discount & Get Top 2 ///////////////////////////
 
   def calculateDiscount(discounts: List[Double]): Double = {
     val top2 = discounts.filter(_ > 0).sorted(Ordering[Double].reverse).take(2)
@@ -180,31 +132,5 @@ object MainFunctions extends App {
 
     finalPrice
   }
-
-  def pipeline(allRows: List[String]): List[(String , Double , Double)] = {
-    // allRows.map(row).applyRules.calculateDiscounts.finalPrice
-    allRows.map{row =>
-      val discount = applyRules(row)
-
-      println(s"DEBUG: Raw row: $row")
-      println(s"DEBUG: Applied rules results: $discount")
-
-      val avgDiscount = calculateDiscount(discount)
-
-      println(s"DEBUG: AVGDiscount: $avgDiscount")
-
-      val totalPrice = finalPrice(row, avgDiscount)
-
-      println(s"DEBUG: TotalPrice: $totalPrice")
-
-      (getProductName(row) , avgDiscount , totalPrice)
-    }
-
-  }
-
-
-  val results = pipeline(data)
-
-  DB_Connection.insertAll(results)
 
 }
