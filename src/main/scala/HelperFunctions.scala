@@ -42,7 +42,17 @@ object HelperFunctions {
     splitRow(row)(Config.quantityCol).toInt
   }
 
-  // 6- Compare two dates and get the Days between them
+  // 6- Get PaymentMethod
+  def getPaymentMethod(row: String): String = {
+    splitRow(row)(Config.paymentMethodCol)
+  }
+
+  // 7- Get Channel Type
+  def getChannel(row: String): String = {
+    splitRow(row)(Config.channelCol)
+  }
+
+  // 8- Compare two dates and get the Days between them
   def compareDates(f1: String => LocalDate, f2: String => LocalDate, row: String): Long = {
     // Take getTransDate & getExpiryDate To Get Difference Between Them
 

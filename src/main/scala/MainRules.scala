@@ -1,6 +1,7 @@
 import HelperFunctions.{ getQuantity, compareDates,
                          getTransDate, getExpiryDate,
-                         getProductName, getPrice
+                         getProductName, getPrice,
+                         getPaymentMethod, getChannel
                        }
 
 object MainRules {
@@ -70,7 +71,7 @@ object MainRules {
     else if (name.contains("wine"))
       5
     else
-      0.0
+      0.00
   }
 
   ////////////////
@@ -92,6 +93,50 @@ object MainRules {
     }
   }
 
+  ////////////////
+
+  // Qualify to Rule5
+  def Q_paymentVisaRule(row: String): Boolean = {
+
+    val paymentMethod = getPaymentMethod(row)
+
+    if (paymentMethod == "Visa")
+      true
+    else
+      false
+  }
+
+  // Calculate Rule5
+  def C_paymentVisaRule(row: String): Double = {
+    if (Q_paymentVisaRule(row))
+      5
+    else
+      0.00
+  }
+
+  ////////////////
+
+  // Qualify to Rule6
+  def Q_AppRule(row: String): Boolean = {
+
+    val channelType = getChannel(row)
+
+    if (channelType == "App")
+      true
+    else
+      false
+  }
+
+  // Calculate Rule6
+  def C_AppRule(row: String): Double = {
+    val q = getQuantity(row)
+    if (Q_AppRule(row)) {
+       val disc = ((q - 1) / 5 + 1) * 5.00
+       disc
+    } else
+      0.00
+  }
+
   /////////////////////////// Combine All Rules ///////////////////////////
 
   def allRules(q: String => Boolean, c: String => Double): String => Double = {
@@ -99,15 +144,18 @@ object MainRules {
       if (q(row))
         c(row)
       else
-        0.0
+        0.00
   }
 
   val rule1 = allRules(Q_expiryRule, C_expiryRule)
   val rule2 = allRules(Q_specialDateRule, C_specialDateRule)
   val rule3 = allRules(Q_productNameRule, C_productNameRule)
   val rule4 = allRules(Q_productQuantityRule, C_productQuantityRule)
+  val rule5 = allRules(Q_paymentVisaRule, C_paymentVisaRule)
+  val rule6 = allRules(Q_AppRule, C_AppRule)
 
-  val rules: List[String => Double] = List(rule1, rule2, rule3, rule4)
+
+  val rules: List[String => Double] = List(rule1, rule2, rule3, rule4, rule5, rule6)
 
 
   def applyRules(row: String): List[Double] = {
