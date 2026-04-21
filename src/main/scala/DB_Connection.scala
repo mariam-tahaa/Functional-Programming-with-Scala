@@ -8,9 +8,9 @@ object DB_Connection {
   // 2. Create Connection
   def getConnection(): Connection = {
 
-    val url = "jdbc:oracle:thin:@localhost:1521:xe"
-    val user = "scala_orders"
-    val password = "1234"
+    val url = Config.dbUrl
+    val user = Config.dbUser
+    val password = Config.dbPassword
 
     DriverManager.getConnection(url, user, password)
   }
