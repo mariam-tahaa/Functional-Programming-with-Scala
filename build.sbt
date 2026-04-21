@@ -6,8 +6,9 @@ lazy val root = (project in file("."))
   .settings(
     name := "MainFunctions"
   )
-libraryDependencies ++= Seq(
-  "ch.qos.logback" % "logback-classic" % "1.2.12" )
-
+// oracle database
 libraryDependencies += "com.oracle.database.jdbc" % "ojdbc8" % "21.1.0.0"
+
+// configuration data
+libraryDependencies += "com.typesafe" % "config" % "1.4.3"
 

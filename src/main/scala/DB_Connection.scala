@@ -3,7 +3,7 @@ import java.sql.{Connection, DriverManager, PreparedStatement}
 object DB_Connection {
 
   // 1. Load Oracle Driver
-  Class.forName("oracle.jdbc.OracleDriver")
+  Class.forName(Config.oracleDriver)
 
   // 2. Create Connection
   def getConnection(): Connection = {

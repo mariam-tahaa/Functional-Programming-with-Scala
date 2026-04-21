@@ -45,3 +45,6 @@ build/
 
 ### Scala ###
 .bsp/
+
+### Project Files ###
+src/main/resources/application.conf
