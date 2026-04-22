@@ -158,7 +158,6 @@ This project emphasizes clean, maintainable Scala code:
 
 ## Pipeline Test Execution
 
-### Log schema
 - In Successful case , and Handling File, and Database Error
   <img width="1258" height="360" alt="image" src="https://github.com/user-attachments/assets/dc3d8e5a-835e-4371-85e9-f08ce1c46c98" />
 
