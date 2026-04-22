@@ -102,13 +102,25 @@ CREATE TABLE transactions_order (
 
 ### 3\. Configuration
 
-Update `Config.scala` & `application.config` with your environment details:
+Update `Config.scala` & `application.config` with your environment details from `Config` Function in `Config.scala`
 
 ```scala
-val dbUrl = "jdbc:oracle:thin:@localhost:1521:xe"
-val dbUser = "SYSTEM"
-val dbPassword = "your_password"
-val dataPath = "path/to/your/input.csv"
+val dbUrl: String = config.getString("database.url")
+val dbUser: String = config.getString("database.user")
+val dbPassword: String = config.getString("database.password")
+
+val logPath: String = config.getString("paths.logPath")
+val dataPath: String = config.getString("paths.dataPath")
+
+val oracleDriver: String = config.getString("oracleDriver.driver")
+
+val transDateCol:     Int = config.getInt("columns.transDateCol")
+val productNameCol:   Int = config.getInt("columns.productNameCol")
+val expiryDateCol:    Int = config.getInt("columns.expiryDateCol")
+val quantityCol:      Int = config.getInt("columns.quantityCol")
+val unitPriceCol:     Int = config.getInt("columns.unitPriceCol")
+val channelCol:       Int = config.getInt("columns.channelCol")
+val paymentMethodCol: Int = config.getInt("columns.paymentMethodCol")
 ```
 
 ### 4\. Running the Engine
@@ -148,13 +160,13 @@ This project emphasizes clean, maintainable Scala code:
 
 ### Log schema
 - In Successful case , and Handling File, and Database Error
-<img width="1258" height="360" alt="image" src="https://github.com/user-attachments/assets/dc3d8e5a-835e-4371-85e9-f08ce1c46c98" />
+  <img width="1258" height="360" alt="image" src="https://github.com/user-attachments/assets/dc3d8e5a-835e-4371-85e9-f08ce1c46c98" />
 
 - Processing & Insertion Time For 1000 rows
   <img width="1017" height="169" alt="image" src="https://github.com/user-attachments/assets/8a7d7e66-50c6-45cd-b29d-22a07bcfe726" />
 
 - Processing & Insertion Time For 10M rows
-<img width="801" height="197" alt="image" src="https://github.com/user-attachments/assets/3bcb11d5-083c-4e87-a67b-41cf2b2f3714" />
+  <img width="801" height="197" alt="image" src="https://github.com/user-attachments/assets/3bcb11d5-083c-4e87-a67b-41cf2b2f3714" />
 
 
 
