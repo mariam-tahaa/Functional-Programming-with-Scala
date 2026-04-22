@@ -15,7 +15,7 @@ object DB_Connection {
   }
 
   // 2. Insert orders as batches to DB
-  def insertBatch(results: List[(String, Double, Double)]): Unit = {
+  def insertBatch(results: Vector[(String, Double, Double)]): Unit = {
 
     val conn = getConnection()
 

@@ -9,3 +9,65 @@
 [2026-04-21T23:46:20.764597] [INFO] Successfully inserted 1000 records.
 [2026-04-21T23:51:07.348140800] [INFO] Start Processing New Orders!!!
 [2026-04-21T23:51:07.369957300] [ERROR] Failed to read file: src\main\resources\TRX1000.csv (The system cannot find the file specified)
+[2026-04-22T03:21:37.841704] [INFO] Start Processing New Orders!!!
+[2026-04-22T03:21:37.934662600] [INFO] File has been read successfully
+[2026-04-22T03:21:39.184325] [INFO] Successfully inserted 1000 records.
+[2026-04-22T03:21:57.963920100] [INFO] Start Processing New Orders!!!
+[2026-04-22T03:22:06.609887100] [INFO] File has been read successfully
+[2026-04-22T03:23:29.240983400] [INFO] Successfully inserted 10000000 records.
+[2026-04-22T03:27:25.858928300] [INFO] Start Processing New Orders!!!
+[2026-04-22T03:27:28.989933200] [INFO] File read successfully — 10000000 rows to process
+[2026-04-22T03:27:48.993032900] [INFO] Processing complete — 10000000 succeeded, 0 failed
+[2026-04-22T03:28:18.196863800] [INFO] Successfully inserted 10000000 records in batches of 500000.
+[2026-04-22T03:29:45.838806800] [INFO] Start Processing New Orders!!!
+[2026-04-22T03:29:48.897292200] [INFO] File read successfully — 10000000 rows to process
+[2026-04-22T03:30:05.243367900] [INFO] Processing complete — 10000000 succeeded, 0 failed
+[2026-04-22T03:30:38.880476500] [INFO] Successfully inserted 10000000 records in batches of 100000.
+[2026-04-22T03:30:57.099467200] [INFO] Start Processing New Orders!!!
+[2026-04-22T03:30:59.580084400] [INFO] File read successfully — 10000000 rows to process
+[2026-04-22T03:31:17.262612600] [INFO] Processing complete — 10000000 succeeded, 0 failed
+[2026-04-22T03:31:51.314597] [INFO] Successfully inserted 10000000 records in batches of 300000.
+[2026-04-22T03:32:14.405262700] [INFO] Start Processing New Orders!!!
+[2026-04-22T03:32:17.056515] [INFO] File read successfully — 10000000 rows to process
+[2026-04-22T03:32:36.978908300] [INFO] Processing complete — 10000000 succeeded, 0 failed
+[2026-04-22T03:33:13.369099] [INFO] Successfully inserted 10000000 records in batches of 500000.
+[2026-04-22T03:33:38.753652100] [INFO] Start Processing New Orders!!!
+[2026-04-22T03:33:41.182855100] [INFO] File read successfully — 10000000 rows to process
+[2026-04-22T03:33:57.025478500] [INFO] Processing complete — 10000000 succeeded, 0 failed
+[2026-04-22T03:34:23.605498600] [INFO] Successfully inserted 10000000 records in batches of 100000.
+[2026-04-22T03:37:43.256895800] [INFO] Start Processing New Orders!!!
+[2026-04-22T03:37:45.697857800] [INFO] File read successfully — 10000000 rows to process
+[2026-04-22T03:38:02.898233100] [INFO] Processing complete — 10000000 succeeded, 0 failed
+[2026-04-22T03:38:31.256764900] [INFO] Successfully inserted 10000000 records in batches of 100000.
+[2026-04-22T03:39:23.474530700] [INFO] Start Processing New Orders!!!
+[2026-04-22T03:39:26.146639700] [INFO] File read successfully — 10000000 rows to process
+[2026-04-22T03:39:44.547521400] [INFO] Processing complete — 10000000 succeeded, 0 failed
+[2026-04-22T03:40:16.937994800] [INFO] Successfully inserted 10000000 records in batches of 90000.
+[2026-04-22T03:40:34.837901700] [INFO] Start Processing New Orders!!!
+[2026-04-22T03:40:37.824290400] [INFO] File read successfully — 10000000 rows to process
+[2026-04-22T03:40:55.586791500] [INFO] Processing complete — 10000000 succeeded, 0 failed
+[2026-04-22T03:41:26.713935] [INFO] Successfully inserted 10000000 records in batches of 200000.
+[2026-04-22T13:26:57.768290] [INFO] Start Processing New Orders!!!
+[2026-04-22T13:27:04.402799700] [INFO] File read successfully — 10000000 rows to process
+[2026-04-22T13:27:21.099752600] [INFO] Processing complete — 10000000 succeeded, 0 failed
+[2026-04-22T13:27:51.447997100] [INFO] Successfully inserted 10000000 records in batches of 200000.
+[2026-04-22T13:46:55.909196200] [INFO] Start Processing New Orders!!!
+[2026-04-22T13:47:02.392505900] [INFO] File read successfully — 10000000 rows to process
+[2026-04-22T13:47:22.868972400] [INFO] Processing complete — 10000000 succeeded, 0 failed
+[2026-04-22T13:47:54.927931700] [INFO] Successfully inserted 10000000 records in batches of 100000.
+[2026-04-22T13:48:19.463649700] [INFO] Start Processing New Orders!!!
+[2026-04-22T13:48:25.465686500] [INFO] File read successfully — 10000000 rows to process
+[2026-04-22T13:48:43.262206400] [INFO] Processing complete — 10000000 succeeded, 0 failed
+[2026-04-22T13:49:07.726722900] [INFO] Successfully inserted 10000000 records in batches of 200000.
+[2026-04-22T14:07:50.671318300] [INFO] Start Processing New Orders!!!
+[2026-04-22T14:07:53.023769500] [INFO] File read successfully — 10000000 rows to process
+[2026-04-22T14:08:09.265672] [INFO] Processing complete — 10000000 succeeded, 0 failed
+[2026-04-22T14:08:37.906710700] [INFO] Successfully inserted 10000000 records in batches of 300000.
+[2026-04-22T14:09:00.187754100] [INFO] Start Processing New Orders!!!
+[2026-04-22T14:09:02.519056900] [INFO] File read successfully — 10000000 rows to process
+[2026-04-22T14:09:18.286921500] [INFO] Processing complete — 10000000 succeeded, 0 failed
+[2026-04-22T14:09:49.110969200] [INFO] Successfully inserted 10000000 records in batches of 500000.
+[2026-04-22T14:11:39.224843700] [INFO] Start Processing New Orders!!!
+[2026-04-22T14:11:41.515132] [INFO] File read successfully — 10000000 rows to process
+[2026-04-22T14:11:56.664465] [INFO] Processing complete — 10000000 succeeded, 0 failed
+[2026-04-22T14:12:27.897051600] [INFO] Successfully inserted 10000000 records in batches of 200000.

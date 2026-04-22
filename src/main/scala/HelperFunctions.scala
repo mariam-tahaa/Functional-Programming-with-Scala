@@ -4,9 +4,9 @@ import scala.util.{Try, Using}
 
 object HelperFunctions {
   // Read file
-  def readFile(fileName: String, codec: String = Codec.default.toString): Try[List[String]] = {
+  def readFile(fileName: String, codec: String = Codec.default.toString): Try[Vector[String]] = {
     Using(Source.fromFile(fileName, codec)) {
-      source => source.getLines().toList
+      source => source.getLines().toVector
     }
   }
 

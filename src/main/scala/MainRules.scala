@@ -7,8 +7,7 @@ import HelperFunctions.{ getQuantity,
 
 object MainRules {
 
-  // To avoid recalculation of functions in the code
-  // Cash functions
+  // Parse Row Data From String To Its Actual DataType
   case class ParsedRow(
                         transDate: java.time.LocalDate,
                         expiryDate: java.time.LocalDate,
@@ -19,6 +18,7 @@ object MainRules {
                         channel: String
                       )
 
+  // Extract Row From Data And Convert It Into It's DataType
   def parseRow(row: String): ParsedRow = {
     ParsedRow(
       getTransDate(row),
@@ -62,7 +62,7 @@ object MainRules {
   val specialDateRule = Rule(
     qualify = p =>
       p.transDate.getDayOfMonth == 23 &&
-        p.transDate.getMonthValue == 3,
+      p.transDate.getMonthValue == 3,
 
     calculate = _ => 50
   )
