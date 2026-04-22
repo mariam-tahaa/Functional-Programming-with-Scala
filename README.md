@@ -1,16 +1,24 @@
 # Retail Discount Rule Engine
 
-A high-performance, functional rule-based engine built in **Scala** that evaluates retail transactions against business discount logic, computes final prices, and persists results to an **Oracle Database**. The engine is designed for high-throughput processing using parallel execution and chunked streaming to handle millions of records efficiently.
+<img width="1440" height="2136" alt="image" src="https://github.com/user-attachments/assets/4a7792af-528b-495d-bddb-4c88930d5d1f" />
+
+---
+## About Project
+
+A high-performance, functional rule-based engine built in Scala that evaluates retail transactions against business discount logic, computes final prices, and persists results to an Oracle Database. The engine is designed for high-throughput processing using parallel execution that detects available CPU cores and chunked streaming based on data size, enabling efficient handling of thousands to millions of records.
+
+---
 
 ## Table of Contents
 
   * Overview
-  * Discount Rules]
+  * Discount Rules
   * Project Structure
   * Tech Stack
   * Getting Started
   * How It Works
   * Functional Programming Principles
+  * Pipeline Test Execution
 
 -----
 
@@ -24,6 +32,7 @@ The **Retail Discount Rule Engine** automates the pricing lifecycle for retail t
   * **Fault Tolerance:** Employs `Try` and `Either` to ensure a single malformed row doesn't crash the entire pipeline.
   * **Memory Efficiency:** Processes data in dynamic chunks, keeping RAM usage stable even with 10M+ rows.
   * **Top-2 Average Logic:** If an order qualifies for multiple discounts, the engine automatically averages the **top two** highest values.
+  * **Scalability** If you want to add rules any time just put your new functions' of rules in the list, and run your pipeline.
 
 -----
 
@@ -47,14 +56,16 @@ The engine evaluates each order against these specific business qualifiers:
 ```text
 Functional-Programming-With-Scala/
 ├── src/main/scala/
-│   ├── Main.scala              # Entry point & Parallel Pipeline logic
-│   ├── MainRules.scala         # Rule definitions & Parsing (ParsedRow)
-│   ├── DB_Connection.scala     # JDBC Oracle integration & Batch Inserts
-│   ├── HelperFunctions.scala   # File I/O and String manipulation
-│   ├── Log.scala               # Custom File-based Logger
-│   └── Config.scala            # Configuration constants (DB URL, Paths)
-├── resources/rule_engine.log   # Application runtime logs
-└── build.sbt                   # SBT dependencies
+│   ├── Main.scala                  # Entry point & Parallel Pipeline logic
+│   ├── MainRules.scala             # Rule definitions & Parsing (ParsedRow)
+│   ├── DB_Connection.scala         # JDBC Oracle integration & Batch Inserts
+│   ├── HelperFunctions.scala       # File I/O and String manipulation
+│   ├── Log.scala                   # Custom File-based Logger
+│   └── Config.scala                # Configuration constants (DB URL, Paths, and Columns' Number)
+├── src/resources/
+│   ├── rule_engine.log             # Application runtime logs
+│   ├── application.config          # Application Hidden configuration like (DB : username , password)
+└── build.sbt                       # SBT dependencies
 ```
 
 -----
@@ -91,7 +102,7 @@ CREATE TABLE transactions_order (
 
 ### 3\. Configuration
 
-Update `Config.scala` with your environment details:
+Update `Config.scala` & `application.config` with your environment details:
 
 ```scala
 val dbUrl = "jdbc:oracle:thin:@localhost:1521:xe"
@@ -130,3 +141,21 @@ This project emphasizes clean, maintainable Scala code:
   * **Pure Logic:** The `MainRules` object contains pure functions that are easy to unit test.
   * **Declarative Patterns:** Replaced loops with high-order functions like `map`, `flatMap`, and `foldLeft`.
   * **Type Safety:** Used `Either[String, T]` to handle domain errors and `Try[T]` for infrastructure side effects.
+
+-----
+
+## Pipeline Test Execution
+
+### Log schema
+- In Successful case , and Handling File, and Database Error
+<img width="1258" height="360" alt="image" src="https://github.com/user-attachments/assets/dc3d8e5a-835e-4371-85e9-f08ce1c46c98" />
+
+- Processing & Insertion Time For 1000 rows
+  <img width="1017" height="169" alt="image" src="https://github.com/user-attachments/assets/8a7d7e66-50c6-45cd-b29d-22a07bcfe726" />
+
+- Processing & Insertion Time For 10M rows
+<img width="801" height="197" alt="image" src="https://github.com/user-attachments/assets/3bcb11d5-083c-4e87-a67b-41cf2b2f3714" />
+
+
+
+
